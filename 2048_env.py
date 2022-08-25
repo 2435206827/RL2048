@@ -226,14 +226,6 @@ if __name__ == "__main__":
 
     env = game2048()
 
-    # 随机进行
-    # for i in range(200):
-    #     s, r, d, _ = env.step(env.action_space.sample())
-    #     if d != True:
-    #         env.render()
-    #         print("times: " + str(i))
-
-    # 注意，为防止梯度爆炸，送入DQN前统一使用log2进行归一化
     model = QNetwork()
     optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
     replay_buffer = deque(maxlen = 10000) # 使用一个 deque 作为 Q Learning 的经验回放池
@@ -249,13 +241,7 @@ if __name__ == "__main__":
             else:
                 state_ = tran(state)
                 action = model.predict(np.expand_dims(np.array(state_), axis = 0)).numpy()   # 选择模型计算出的 Q Value 最大的动作
-                maxx = -114514
-                max_a = -1
-                for a in range(len(action)):
-                    if action[a] > maxx:
-                        maxx = action[a]
-                        max_a = a
-                action = action[max_a]
+                action = action[0]
                 # print("action: " + str(action))
 
 
